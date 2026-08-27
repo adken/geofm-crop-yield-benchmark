@@ -170,8 +170,15 @@ and patch identity.
 
 ## Data
 
-The Sentinel-2 patches and the embedding parquets are not in this repository —
-94 GB and 14 GB respectively. The Earth Engine download scripts under
+The Sentinel-2 patches and the embedding parquets are not in this repository.
+The 427,049 patch–timestep files occupy 273 GB as compressed NPZ archives, and
+1.04 TB uncompressed at ten bands and 256 × 256 pixels in single precision; the
+embedding parquets add 14 GB. The Earth Engine download scripts under
 `data/scripts/` regenerate the imagery, and the extraction modules regenerate
 the embeddings from it. Small run artefacts, contracts and summary tables are
 included so the reported numbers can be traced without rerunning anything.
+
+The size difference is the practical argument for working from embeddings: the
+largest single encoder output is 2.6 GB against 273 GB of source imagery, and
+the pooled county–year features that the regression heads actually consume come
+to 59 MB for all seven representations together.
