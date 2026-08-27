@@ -57,3 +57,9 @@ core.*
 
 /cohort_covered/
 /alphaearth.parquet.provenance.json
+
+# Superseded by the manuscript's own appendix, which is authoritative.
+APPENDIX_REPRODUCIBILITY.tex
+EXPERIMENTAL_SETUP.md
+VALIDATION_REVIEW.md
+SUPERVISED_MODELS.md
