@@ -50,8 +50,7 @@ __pycache__/
 *.err
 core.*
 
-# stray scratch files
-1eff1xyo
-6ds17yh4
-94fm7qo6
-aft1dxcs
+# Stray 4-byte scratch files left at the repository root by an editor or tool.
+# Matched by shape -- eight lowercase alphanumerics, no extension -- rather than
+# by name, so new ones are caught too. LICENSE and README.md are unaffected.
+/[a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9]
