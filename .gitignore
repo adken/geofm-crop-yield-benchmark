@@ -54,3 +54,6 @@ core.*
 # Matched by shape -- eight lowercase alphanumerics, no extension -- rather than
 # by name, so new ones are caught too. LICENSE and README.md are unaffected.
 /[a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9][a-z0-9]
+
+/cohort_covered/
+/alphaearth.parquet.provenance.json
