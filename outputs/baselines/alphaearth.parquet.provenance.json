@@ -1,0 +1,11 @@
+{
+  "backbone": "alphaearth",
+  "climate_late_fusion": false,
+  "county_years": 2180,
+  "embedding_dim": 64,
+  "experiment_family": "main_benchmark",
+  "output": "/tmp/out/embeddings/alphaearth.parquet",
+  "representation_scope": "sequence",
+  "schema_version": 1,
+  "source": "/sessions/magical-intelligent-brahmagupta/mnt/benchmark-embeddings/data/alphaearth_matched.csv"
+}

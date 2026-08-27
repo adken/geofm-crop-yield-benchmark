@@ -1,0 +1,64 @@
+# Upstream model checkouts and historical analysis assets are intentionally
+# outside this package. Override these paths for each machine/cluster.
+upstream:
+  presto: ${YIELD_EMBEDDINGS_ROOT}/presto
+  alphaearth: ${YIELD_EMBEDDINGS_ROOT}/alpha-earth
+  clay: ${YIELD_EMBEDDINGS_ROOT}/clay
+  prithvi: ${YIELD_EMBEDDINGS_ROOT}/prithvi
+  terramind: ${YIELD_EMBEDDINGS_ROOT}/terramind
+
+clay_v1_5:
+  repository: ${YIELD_EMBEDDINGS_ROOT}/clay/model
+  checkpoint: ${CLAY_V15_CHECKPOINT}
+  metadata: ${YIELD_EMBEDDINGS_ROOT}/clay/model/configs/metadata.yaml
+  sentinel2_patch_timesteps: ${COUNTY_PATCH_TIMESTEPS}
+  expected_input_count: 77813
+  expected_spatial_size: [256, 256]
+  oversize_policy: center_crop
+  undersize_policy: error
+  nonfinite_policy: error
+  token_pool: cls
+
+presto:
+  repository: ${YIELD_EMBEDDINGS_ROOT}/presto/presto
+  sentinel2_patch_timesteps: ${COUNTY_PATCH_TIMESTEPS}
+  era5_patch_timesteps: ${ERA5_PATCH_TIMESTEPS}
+  daymet_county_features: ${S2_DAYMET_MERGED}
+  daymet_fips_map: ${COUNTY_FIPS_MAP}
+  expected_sentinel2_input_count: 77813
+  expected_timesteps: 7
+  expected_spatial_size: [256, 256]
+  oversize_policy: center_crop_before_spatial_mean
+  undersize_policy: error
+  sentinel2_source_units: auto
+  normalization_owner: presto.construct_single_presto_input
+  representation_scope: sequence
+  spatial_pool_at_county: mean_std
+  # Actual NPZ fallback order; metadata aliases are preferred when present.
+  era5_source_bands: [total_precipitation, temperature_2m]
+  era5_model_bands: [temperature_2m, total_precipitation]
+  era5_units: {temperature_2m: K, total_precipitation: m}
+  daymet_fusion_stage: county_year_late
+  daymet_variables: [dayl, prcp, srad, tmax, tmin]
+  daymet_feature_count: 35
+  experiment_families:
+    main_benchmark: [presto_s2]
+    auxiliary_climate_fusion: [presto_s2_era5, presto_s2_daymet_late_fusion]
+
+daymet_auxiliary_fusion:
+  experiment_family: auxiliary_climate_fusion
+  representations: [presto_s2, clay_v1_5, prithvi, terramind, sentinel2_indices]
+  sentinel2_daymet_merged: ${S2_DAYMET_MERGED}
+  sentinel2_index_features: ${S2_DAYMET_MERGED}
+  daymet_county_features: ${S2_DAYMET_MERGED}
+  sentinel2_index_variables: [evi, lai, fpar]
+  sentinel2_index_feature_count: 21
+  fusion_stage: county_year_late
+  excluded_from_main_benchmark: true
+
+historical_entrypoints:
+  alphaearth_notebook: ${YIELD_EMBEDDINGS_ROOT}/alpha-earth/embeddings_alphaearth.ipynb
+  prithvi_notebook: ${YIELD_EMBEDDINGS_ROOT}/prithvi/county_yield_prithvi.ipynb
+  presto_package: ${YIELD_EMBEDDINGS_ROOT}/presto/presto
+  clay_checkpoint_repo: ${YIELD_EMBEDDINGS_ROOT}/clay/model
+  terramind_checkpoint_repo: ${YIELD_EMBEDDINGS_ROOT}/terramind

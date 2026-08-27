@@ -1,0 +1,13 @@
+representation,dim,head,r2,r2_sd,rmse,rmse_sd,mae,folds
+AlphaEarth,64,Ridge,0.7803,0.0412,16.0892,1.5059,11.5675,5
+AlphaEarth,64,Random Forest,0.8132,0.0351,14.8149,1.0456,10.6623,5
+AlphaEarth,64,XGBoost,0.8335,0.0276,14.0015,0.9521,10.0078,5
+AlphaEarth,64,EBM,0.826,0.0312,14.308,1.1126,10.2626,5
+S2 indices,21,Ridge,0.7651,0.0399,16.6221,0.8013,12.6765,5
+S2 indices,21,Random Forest,0.8014,0.0488,15.2198,1.2643,11.3146,5
+S2 indices,21,XGBoost,0.809,0.0497,14.9098,1.3133,11.0471,5
+S2 indices,21,EBM,0.7589,0.0484,16.8122,1.0604,12.7402,5
+presto_sample,256,Ridge,0.796,0.0465,15.4506,1.3133,11.6479,5
+presto_sample,256,Random Forest,0.7798,0.055,16.0237,1.3984,12.1263,5
+presto_sample,256,XGBoost,0.8097,0.0364,14.9463,0.9274,11.3274,5
+presto_sample,256,EBM,0.8071,0.0326,15.0691,0.8112,11.5062,5

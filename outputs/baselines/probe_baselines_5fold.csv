@@ -1,0 +1,11 @@
+representation,fold,county_r2,rmse_bu_per_acre,mae_bu_per_acre,county_n,ridge_alpha
+alphaearth,0,0.743,11.8386,8.8738,208,1.0
+alphaearth,1,0.6705,11.9832,9.1589,208,10.0
+alphaearth,2,0.6728,12.885,9.5533,208,0.01
+alphaearth,3,0.5632,14.1682,10.1694,207,1.0
+alphaearth,4,0.7246,12.3468,9.5551,207,1.0
+sentinel2_indices,0,0.7333,12.0595,9.3096,208,0.1
+sentinel2_indices,1,0.5679,13.7233,10.6889,208,0.01
+sentinel2_indices,2,0.6525,13.2784,10.5093,208,0.01
+sentinel2_indices,3,0.5737,13.9967,10.9798,207,1.0
+sentinel2_indices,4,0.6469,13.98,10.7498,207,0.01

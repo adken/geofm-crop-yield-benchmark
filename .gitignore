@@ -1,0 +1,57 @@
+# ---------------------------------------------------------------------------
+# Source data and model artefacts. 94 GB of Sentinel-2 patches, 14 GB of
+# embedding parquets and 15 GB of checkpoints do not belong in a git history.
+# The extraction scripts and Earth Engine downloaders reproduce all of it.
+# ---------------------------------------------------------------------------
+data/
+hf_cache/
+models/
+clay/
+embeddings/
+*.parquet
+*.parquet.bak
+*.ckpt
+*.pt
+
+# ---------------------------------------------------------------------------
+# Superseded runs. Every analysis reported in the paper uses joint patch-
+# timestep pooling; these directories are the earlier two-stage or
+# Random-Forest versions, and the 2,180 cohort that preceded the matched 2,076.
+# Retained on disk, excluded from the published repository.
+# ---------------------------------------------------------------------------
+outputs/loyo_covered/
+outputs/loyo_covered_ridge/
+outputs/loso_all_encoders_covered/
+outputs/climate_fusion_covered/
+outputs/cohort_2180/
+outputs/outputs/
+outputs/results/
+legacy/
+
+# ---------------------------------------------------------------------------
+# Per-run artefacts that are large or regenerable. Summaries, contracts and
+# result files are kept; per-county predictions and per-seed run dumps are not.
+# ---------------------------------------------------------------------------
+outputs/**/predictions.csv
+outputs/temporal_ablation_covered/*/runs/
+outputs/**/best.pt
+outputs/**/normalization.json
+
+# ---------------------------------------------------------------------------
+# Machine-specific and generated
+# ---------------------------------------------------------------------------
+configs/local.env
+__pycache__/
+*.pyc
+*.egg-info/
+.ipynb_checkpoints/
+.DS_Store
+*.out
+*.err
+core.*
+
+# stray scratch files
+1eff1xyo
+6ds17yh4
+94fm7qo6
+aft1dxcs

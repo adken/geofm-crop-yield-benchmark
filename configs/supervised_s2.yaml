@@ -1,0 +1,71 @@
+# YieldSAT-inspired, fully supervised Sentinel-2 county baseline.
+# Environment variables are expanded by the training CLI.
+
+out_dir: ${SCRATCH_ROOT}/results/benchmark_embeddings/supervised_s2_3d_convlstm_countyT7_full_fold0
+seed: 20260614
+deterministic: true
+device: auto
+
+data:
+  npz_dir: ${COUNTY_PATCH_TIMESTEPS}
+  yield_csv: ${YIELD_LABELS}
+  expected_timesteps: 7
+  # Larger source patches are center-cropped; undersized patches fail fast.
+  expected_spatial_size: [256, 256]
+  oversize_policy: center_crop
+  # The JUPITER corpus sampled 2000/2000 at 256x256, so "error" costs nothing
+  # and halts loudly if that ever changes. "skip" would force a zip-header read
+  # of all 427,049 files in each of the 45 supervised jobs.
+  # "error" restores the strict documented contract.
+  undersize_policy: error
+  require_complete_schedule: true
+  fast_filename_index: true
+
+split:
+  mode: primary
+  path: ${COMMON_SPLIT_MANIFEST}
+  fold: 0
+  validation_fold_offset: 1
+  require_all_years_in_each_partition: true
+
+# Statistics are fitted only from the selected training county-years. These
+# deterministic caps reduce the one-time statistics pass without using any
+# validation/test observations.
+normalization:
+  max_patches_per_county: 8
+  max_pixels_per_patch: 8192
+  chunk_size: 2
+
+model:
+  # Choose: 3d_convlstm, gru, or lstm.
+  name: 3d_convlstm
+  input_channels: 10
+  stem_channels: [24, 48, 64]
+  stem_kernel_size: [3, 3, 3]
+  stem_spatial_strides: [2, 2, 2]
+  stem_normalization: group
+  stem_norm_groups: 8
+  activation: gelu
+  dropout: 0.15
+  convlstm_hidden_channels: [64]
+  convlstm_kernel_sizes: [3]
+  recurrent_hidden: 64
+  recurrent_layers: 1
+  bidirectional: false
+  head_hidden: 64
+
+training:
+  learning_rate: 0.0003
+  weight_decay: 0.00001
+  # Four counties per optimiser step as before, but as one batch rather than
+  # four accumulated singletons, and all eight patches of a county loaded in
+  # one chunk so the thread pool has something to parallelise. The effective
+  # batch is unchanged; only the GPU occupancy and the read concurrency move.
+  batch_size: 4
+  patches_per_county: 8
+  patch_chunk_size: 8
+  gradient_accumulation_steps: 1
+  gradient_clip: 1.0
+  mixed_precision: true
+  max_epochs: 50
+  patience: 8

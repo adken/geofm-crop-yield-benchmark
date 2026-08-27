@@ -1,0 +1,238 @@
+{
+  "county_years_by_held_out_year": {
+    "2019": 440,
+    "2020": 769,
+    "2021": 443,
+    "2022": 424
+  },
+  "estimator_family": "classical_ml",
+  "evaluation": {
+    "bootstrap": true,
+    "county_pooling": "joint_patch_timestep_mean_std",
+    "criterion": "squared_error",
+    "feature_standardisation": "fitted_on_training_rows_only",
+    "max_depth": null,
+    "max_features": 1.0,
+    "metrics": [
+      "county_r2",
+      "county_rmse",
+      "county_mae"
+    ],
+    "min_samples_leaf": 2,
+    "model_selection": "alpha_by_inner_leave_one_year_out_on_training_years",
+    "n_estimators": 600,
+    "regressor": "Ridge",
+    "regressor_key": "ridge",
+    "regressor_scope": "loyo_only",
+    "ridge_alphas": [
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "seeds": [
+      0
+    ],
+    "split": "leave_one_year_out",
+    "summary": "average_seeds_within_year_then_mean_population_std_across_years",
+    "training_years": "all requested years except held_out_year"
+  },
+  "experiment": "main_benchmark_climate_free_loyo",
+  "feature_aggregation": {
+    "operation_order": "complete_patches_then_joint_pool_over_patch_timestep_rows",
+    "scope": "patch_embedding_representations",
+    "sequence_scope_policy": "identity_on_single_preencoded_sequence_row",
+    "spatial_pool": "mean_and_population_standard_deviation",
+    "spatial_pool_axis": "all_patch_timestep_rows_within_county_year",
+    "spatial_std_ddof": 0,
+    "temporal_pool": "joint",
+    "temporal_pool_axis": "timestep"
+  },
+  "fusion_contract": {
+    "added_climate_features": [],
+    "alphaearth_note": "precomputed_multimodal_reference_not_added_fusion",
+    "daymet_late_fusion": false,
+    "presto_era5_input_fusion": false
+  },
+  "held_out_years": [
+    2019,
+    2020,
+    2021,
+    2022
+  ],
+  "labels": "/Users/adriko/benchmark-embeddings/data/labels/county_yield.csv",
+  "matched_complete_patch_identity_sha256": "3aa7de5e62b742a2ad37306d1a8b2ad52a8dd21d72d6575388480fbd78550aa3",
+  "matched_county_years": 2076,
+  "matched_key_sha256": "58887d4ebc5c92f86d039873af64e599beaba1c124f55a44c0eaf94b4a1f30b3",
+  "representations": {
+    "alphaearth": {
+      "added_climate_features": [],
+      "backbone": "alphaearth",
+      "complete_patch_sequences_only": true,
+      "county_years": 2076,
+      "embedding_rows": 2076,
+      "experiment_family_recorded": [
+        "main_benchmark"
+      ],
+      "feature_dim": 128,
+      "input_modalities_recorded": [
+        "precomputed multimodal"
+      ],
+      "path": "/Users/adriko/benchmark-embeddings/outputs/cohort_covered/alphaearth.parquet",
+      "representation_scope": "sequence",
+      "representation_scope_inferred_for_legacy_alphaearth": false,
+      "spatial_pool": "mean_std_population",
+      "temporal_ingestion": [],
+      "temporal_pool": "preencoded_global_pool",
+      "temporal_pool_requested": "joint"
+    },
+    "clay": {
+      "added_climate_features": [],
+      "backbone": "clay_v1_5_cls",
+      "complete_patch_sequences_only": true,
+      "county_years": 2076,
+      "embedding_rows": 427049,
+      "experiment_family_recorded": [
+        "main_benchmark"
+      ],
+      "feature_dim": 2048,
+      "input_modalities_recorded": [
+        "Sentinel-2"
+      ],
+      "path": "/Users/adriko/benchmark-embeddings/outputs/embeddings/clay_v1_5_cls.parquet",
+      "representation_scope": "timestep",
+      "representation_scope_inferred_for_legacy_alphaearth": false,
+      "spatial_pool": "mean_std_population",
+      "temporal_ingestion": [
+        "single_timestep_independent"
+      ],
+      "temporal_pool": "joint",
+      "temporal_pool_requested": "joint"
+    },
+    "presto": {
+      "added_climate_features": [],
+      "backbone": "presto_s2",
+      "complete_patch_sequences_only": true,
+      "county_years": 2076,
+      "embedding_rows": 61007,
+      "experiment_family_recorded": [
+        "main_benchmark"
+      ],
+      "feature_dim": 256,
+      "input_modalities_recorded": [
+        "Sentinel-2"
+      ],
+      "path": "/Users/adriko/benchmark-embeddings/outputs/embeddings/presto_s2.parquet",
+      "representation_scope": "sequence",
+      "representation_scope_inferred_for_legacy_alphaearth": false,
+      "spatial_pool": "mean_std_population",
+      "temporal_ingestion": [],
+      "temporal_pool": "preencoded_global_pool",
+      "temporal_pool_requested": "joint"
+    },
+    "prithvi": {
+      "added_climate_features": [],
+      "backbone": "prithvi_eo_v2_300_tl_per_timestep_spatial_mean",
+      "complete_patch_sequences_only": true,
+      "county_years": 2076,
+      "embedding_rows": 427049,
+      "experiment_family_recorded": [
+        "main_benchmark"
+      ],
+      "feature_dim": 2048,
+      "input_modalities_recorded": [
+        "Sentinel-2"
+      ],
+      "path": "/Users/adriko/benchmark-embeddings/outputs/embeddings/prithvi.parquet",
+      "representation_scope": "timestep",
+      "representation_scope_inferred_for_legacy_alphaearth": false,
+      "spatial_pool": "mean_std_population",
+      "temporal_ingestion": [
+        "single_timestep_independent"
+      ],
+      "temporal_pool": "joint",
+      "temporal_pool_requested": "joint"
+    },
+    "sentinel2_indices": {
+      "added_climate_features": [],
+      "backbone": "sentinel2_indices",
+      "county_years": 2076,
+      "feature_dim": 21,
+      "feature_names": [
+        "EVI_4",
+        "EVI_5",
+        "EVI_6",
+        "EVI_7",
+        "EVI_8",
+        "EVI_9",
+        "EVI_10",
+        "LAI_4",
+        "LAI_5",
+        "LAI_6",
+        "LAI_7",
+        "LAI_8",
+        "LAI_9",
+        "LAI_10",
+        "FPAR_4",
+        "FPAR_5",
+        "FPAR_6",
+        "FPAR_7",
+        "FPAR_8",
+        "FPAR_9",
+        "FPAR_10"
+      ],
+      "fips_map": "/Users/adriko/benchmark-embeddings/data/geometry/county_fips_map.csv",
+      "incomplete_source_rows_excluded": 0,
+      "interval_schedule": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "path": "/Users/adriko/benchmark-embeddings/outputs/cohort_covered/sentinel2_indices_covered.csv",
+      "spatial_pool": "preaggregated",
+      "temporal_pool": "preaggregated_21d",
+      "unmapped_source_rows_excluded": 0
+    },
+    "terramind": {
+      "added_climate_features": [],
+      "backbone": "terramind_v1_base_s2_6_prithvi",
+      "complete_patch_sequences_only": true,
+      "county_years": 2076,
+      "embedding_rows": 427049,
+      "experiment_family_recorded": [
+        "main_benchmark"
+      ],
+      "feature_dim": 1536,
+      "input_modalities_recorded": [
+        "Sentinel-2"
+      ],
+      "path": "/Users/adriko/benchmark-embeddings/outputs/embeddings/terramind_s2_6.parquet",
+      "representation_scope": "timestep",
+      "representation_scope_inferred_for_legacy_alphaearth": false,
+      "spatial_pool": "mean_std_population",
+      "temporal_ingestion": [
+        "single_timestep_independent"
+      ],
+      "temporal_pool": "joint",
+      "temporal_pool_requested": "joint"
+    }
+  },
+  "schema_version": 1,
+  "software": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "scikit_learn": "1.9.0"
+  },
+  "target_and_metric_units": {
+    "canonical_yield": "bushels_per_acre",
+    "mae": "bushels_per_acre",
+    "r2": "dimensionless",
+    "rmse": "bushels_per_acre"
+  },
+  "workflow_role": "temporal_generalization"
+}

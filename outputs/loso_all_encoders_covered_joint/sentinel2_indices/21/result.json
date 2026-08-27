@@ -1,0 +1,80 @@
+{
+  "selection": {
+    "source": "validation",
+    "metric": "county_rmse",
+    "alpha": 10.0,
+    "value": 18.229952480699655
+  },
+  "test": {
+    "county_r2": -0.44960114698690457,
+    "county_rmse": 17.53495128557148,
+    "county_mae": 13.075086558948867,
+    "county_n": 66
+  },
+  "schema_version": 1,
+  "experiment": {
+    "family": "main_benchmark",
+    "representation_type": "handcrafted_baseline",
+    "id": "handcrafted_sentinel2_indices_ridge_preaggregated_preaggregated_21d",
+    "input_modalities": [
+      "Sentinel-2 indices"
+    ],
+    "climate_fusion": {
+      "source": "none",
+      "stage": "none"
+    },
+    "aggregation": {
+      "spatial": "preaggregated",
+      "temporal": "preaggregated_21d",
+      "representation_scope": "county_year",
+      "complete_patch_sequences_only": false,
+      "daymet_fusion_stage": "none"
+    }
+  },
+  "split": {
+    "path": "outputs/cohort_covered/loso_state_tabular.csv",
+    "fold": 21
+  },
+  "labels": "/Users/adriko/benchmark-embeddings/data/labels/county_yield.csv",
+  "target_and_metric_units": {
+    "canonical_yield": "bushels_per_acre",
+    "r2": "dimensionless",
+    "rmse": "bushels_per_acre",
+    "mae": "bushels_per_acre"
+  },
+  "cohort": {
+    "county_years_before_daymet": 2076,
+    "county_years_after_daymet": 2076,
+    "feature_dim_before_daymet": 21,
+    "feature_dim_after_daymet": 21
+  },
+  "daymet": null,
+  "sentinel2_indices": {
+    "path": "/Users/adriko/benchmark-embeddings/outputs/cohort_covered/sentinel2_indices_covered.csv",
+    "fips_map": "/Users/adriko/benchmark-embeddings/data/geometry/county_fips_map.csv",
+    "feature_count": 21,
+    "feature_names": [
+      "EVI_4",
+      "EVI_5",
+      "EVI_6",
+      "EVI_7",
+      "EVI_8",
+      "EVI_9",
+      "EVI_10",
+      "LAI_4",
+      "LAI_5",
+      "LAI_6",
+      "LAI_7",
+      "LAI_8",
+      "LAI_9",
+      "LAI_10",
+      "FPAR_4",
+      "FPAR_5",
+      "FPAR_6",
+      "FPAR_7",
+      "FPAR_8",
+      "FPAR_9",
+      "FPAR_10"
+    ]
+  }
+}

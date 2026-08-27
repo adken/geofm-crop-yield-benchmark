@@ -1,0 +1,31 @@
+{
+  "cohort_county_years": 2076,
+  "counties": 890,
+  "deviations_from_registry": [
+    "Ridge standardizes features; the published run did not",
+    "EBM uses library defaults except interactions; the registry config underfits by ~0.09 R2",
+    "EBM interactions=0 (interpret default '5x' is 10,240 pairwise terms at 2048 features)"
+  ],
+  "heads": [
+    "Ridge",
+    "Random Forest",
+    "XGBoost",
+    "EBM"
+  ],
+  "representations": {
+    "AlphaEarth": 64,
+    "S2 + Daymet": 56,
+    "S2 indices": 21,
+    "clay": 2048,
+    "presto": 256,
+    "prithvi": 2048,
+    "terramind_s2_10": 1536,
+    "terramind_s2_6": 1536
+  },
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "split": "/Users/adriko/benchmark-embeddings/outputs/cohort_covered/group_kfold_county_tabular.csv"
+}

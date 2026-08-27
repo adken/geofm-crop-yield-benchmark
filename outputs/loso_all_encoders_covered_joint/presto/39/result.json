@@ -1,0 +1,53 @@
+{
+  "selection": {
+    "source": "validation",
+    "metric": "county_rmse",
+    "alpha": 0.01,
+    "value": 20.88829264323241
+  },
+  "test": {
+    "county_r2": 0.04651137583928666,
+    "county_rmse": 15.832605893563953,
+    "county_mae": 12.555557992364053,
+    "county_n": 177
+  },
+  "schema_version": 1,
+  "experiment": {
+    "family": "main_benchmark",
+    "representation_type": "frozen_embedding",
+    "id": "frozen_presto_s2_ridge_mean_std_preencoded_global_pool",
+    "input_modalities": [
+      "Sentinel-2"
+    ],
+    "climate_fusion": {
+      "source": "none",
+      "stage": "none"
+    },
+    "aggregation": {
+      "spatial": "mean_std",
+      "temporal": "preencoded_global_pool",
+      "representation_scope": "sequence",
+      "complete_patch_sequences_only": true,
+      "daymet_fusion_stage": "none"
+    }
+  },
+  "split": {
+    "path": "outputs/cohort_covered/loso_state_tabular.csv",
+    "fold": 39
+  },
+  "labels": "/Users/adriko/benchmark-embeddings/data/labels/county_yield.csv",
+  "target_and_metric_units": {
+    "canonical_yield": "bushels_per_acre",
+    "r2": "dimensionless",
+    "rmse": "bushels_per_acre",
+    "mae": "bushels_per_acre"
+  },
+  "cohort": {
+    "county_years_before_daymet": 2076,
+    "county_years_after_daymet": 2076,
+    "feature_dim_before_daymet": 256,
+    "feature_dim_after_daymet": 256
+  },
+  "daymet": null,
+  "sentinel2_indices": null
+}

@@ -1,0 +1,392 @@
+\section{Implementation and Reproducibility Details}
+\label{app:implementation}
+
+\providecommand{\artifacthash}[4]{\texttt{#1}\allowbreak\texttt{#2}\allowbreak\texttt{#3}\allowbreak\texttt{#4}}
+\providecommand{\artifactrevision}[4]{\texttt{#1}\allowbreak\texttt{#2}\allowbreak\texttt{#3}\allowbreak\texttt{#4}}
+
+This appendix records the implementation that produced the completed benchmark
+artefacts, rather than reconstructing settings from model names or earlier
+configuration drafts.  Encoder settings were read from the provenance sidecars
+written during extraction, and estimator settings were read from the completed
+run contract and executable entry point.  Paths are reported relative to the
+benchmark repository where possible.  Yield values were used directly in their
+reported USDA--NASS unit of bushels per acre; no target-unit conversion was
+applied.
+
+\subsection{Evaluation cohort and Sentinel-2 composites}
+
+The matched evaluation cohort contains 2,076 county--year observations from 890
+counties and covers 2019--2022.  The image corpus used for the completed
+extractions contains 427,049 Sentinel-2 patch--timestep files.  These files form
+61,007 complete spatial-patch sequences, each with seven timesteps.  The number
+of retained patches varies with county area: the completed provenance records a
+minimum of 1, a median of 32, and a maximum of 64 patches per county--year.
+
+Each source patch has a spatial size of $256\times256$ pixels at 10-m ground
+sampling distance.  The common ten-band order is B02, B03, B04, B05, B06, B07,
+B08, B8A, B11, and B12.  The seven composite timestamps are separated by 28
+days: 15 April, 13 May, 10 June, 8 July, 5 August, 2 September, and 30
+September.  Accordingly, the zero-based month vector supplied to Presto is
+$[3,4,5,6,7,8,8]$.  We refer to these inputs as seven 28-day composites
+throughout.
+
+Sentinel-2 Level-2A observations were filtered at collection level using
+\texttt{CLOUDY\_PIXEL\_PERCENTAGE}$<80\%$.  QA60 and the Scene Classification
+Layer were then used to mask cloud, cirrus, cloud-shadow, snow, and ice pixels,
+and the remaining observations were combined by a pixel-wise median within
+each compositing interval.  A spatial patch was retained only when all seven
+timesteps were available.  Oversized arrays were centre-cropped to
+$256\times256$; undersized or non-finite arrays caused extraction to terminate.
+The completed provenance records zero undersized or incomplete spatial patches.
+The saved patch artefacts do not retain the complete list of source Sentinel-2
+scene identifiers, so scene-level reconstruction is not possible from the
+benchmark directory alone.
+
+\subsection{Exact encoder variants and model artefacts}
+
+Table~\ref{tab:encoder_checkpoints_exact} identifies the implementation and
+checkpoint recorded by each completed embedding run.  The SHA-256 values below
+the table were computed from the model artefacts copied into the benchmark
+directory.  They make the local copies verifiable, although the extraction
+sidecars themselves recorded paths and model identifiers rather than hashes.
+
+\begin{table*}[t]
+\centering
+\caption{Exact encoder implementation and model artefact associated with the
+completed embedding files.  ``Dim.'' is the per-row embedding dimension before
+county aggregation.}
+\label{tab:encoder_checkpoints_exact}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{p{2.2cm}p{3.2cm}p{8.4cm}c}
+\toprule
+\textbf{Representation} & \textbf{Implementation identifier} &
+\textbf{Checkpoint or precomputed product used by the completed run} &
+\textbf{Dim.} \\
+\midrule
+Clay & \path{clay_v1_5} & Official \path{clay-v1.5.ckpt}, loaded through the
+final encoder in the Clay model repository; the accompanying official
+\path{configs/metadata.yaml} supplies the Sentinel-2 statistics, wavelengths,
+and 10-m ground sampling distance. & 1024 \\
+
+Prithvi-EO-2.0-300M-TL & \path{prithvi_eo_v2_300_tl} &
+\path{ibm-nasa-geospatial/Prithvi-EO-2.0-300M-TL}, loaded through TerraTorch
+1.2.11.  The cached Hugging Face snapshot revision is
+\path{63adbd39c271da4c42f447e69b1a7c91a338cdc9}. & 1024 \\
+
+TerraMind, 6 bands & \path{terramind_v1_base_s2_6_prithvi} &
+\path{ibm-esa-geospatial/TerraMind-1.0-base}, file
+\path{TerraMind_v1_base.pt}, loaded through TerraTorch 1.2.11.  The cached
+snapshot revision is \path{fb96c70d0a5f68dcc44030b89cbfd8ec3fb0c67a}. & 768 \\
+
+TerraMind, 10 bands & \path{terramind_v1_base_s2_10_zero_pad} & Same TerraMind
+v1 base checkpoint and cached revision as the six-band experiment; only the
+spectral adapter differs. & 768 \\
+
+Presto & \path{presto_s2} & \path{nasaharvest/presto} revision
+\artifactrevision{ba88a3f9d3}{06ea30b90f}{e2f1284d98}{f423487cfa}, using the bundled
+\path{data/default_model.pt}. & 128 \\
+
+AlphaEarth V1 & \path{GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL} & Google Satellite
+Embedding V1 annual product, retrieved through Earth Engine and reduced there
+to county-level means.  No local encoder checkpoint was used.  The exported
+vectors contain the 64 axes A00--A63. & 64 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The copied Clay checkpoint has SHA-256
+\artifacthash{21432069250b9b3f}{9a65ffd0071c5ad5}{6b793247285ab060}{4edf7f531d4798d0}.
+The copied Presto checkpoint has SHA-256
+\artifacthash{559c9d76f525bdf2}{dd3774da8b1e7f15}{10769b73baacac12}{e9e4d8d5c67fbe65}.
+The cached TerraMind v1 base file has SHA-256
+\artifacthash{83c3a0938067c838}{67a46e564443c2fa}{38383bf4f966d931}{b11cb025b847d7ec},
+and the cached Prithvi-EO-2.0-300M-TL file has SHA-256
+\artifacthash{3629cedfbb350faaf}{cb0dac902ae0d3c9}{27e25ce8d9e0024a}{a1276ec66956ddb}.
+
+The repository also contains
+\path{models/Prithvi-EO-2.0-300M/Prithvi_EO_V2_300M.pt} (SHA-256
+\artifacthash{faab2c8b776f0723}{f93431747603a7ec}{586a54fc45473613}{b4322c29752486e7}).
+This is the non-TL 300M checkpoint, but it is \emph{not} the checkpoint named
+by the saved Prithvi provenance.  We therefore report the completed experiment
+as Prithvi-EO-2.0-300M-TL.  The saved file contains 427,049 independently
+encoded, 1024-dimensional patch--timestep vectors; using the non-TL checkpoint
+would require regenerating the embeddings and all downstream results.
+
+For this study, the AlphaEarth vectors were retrieved from the Earth Engine
+collection
+\url{https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_SATELLITE_EMBEDDING_V1_ANNUAL}.
+The V1 annual product was used at the time of the paper.  The 64 embedding axes
+A00--A63 were masked to corn pixels with the USDA Cropland Data Layer and
+averaged over each county in Earth Engine, producing one vector per
+county--year.  The resulting county table, rather than a local AlphaEarth model
+checkpoint or patch-level embedding file, is the input to the benchmark.
+
+\subsection{Embedding extraction}
+
+\paragraph{Clay.}
+All ten Sentinel-2 bands were used at $256\times256$ pixels.  Source digital
+numbers were converted to reflectance when required, and the checkpoint's
+Sentinel-2 means and standard deviations were converted to the same units
+before standardisation.  The extractor used the official cyclic week/hour and
+latitude/longitude encodings and wavelengths in micrometres.  The output is the
+1024-dimensional CLS token from the final encoder layer, one vector per patch
+and timestep.  The completed file contains 427,049 vectors.
+
+\paragraph{Prithvi-EO-2.0-300M-TL.}
+The source image was first checked against the $256\times256$ benchmark
+footprint and then centre-cropped to the native $224\times224$ model input,
+without interpolation or padding.  Six bands were selected in the order B02,
+B03, B04, B8A, B11, and B12 and supplied in digital-number units.  The official
+Prithvi V2 means $(1087,1342,1433,2734,1958,1363)$ and standard deviations
+$(2248,2179,2178,1850,1242,1049)$ were applied once.  Each composite was
+encoded independently as a single frame, with its year, one-based day of year,
+latitude, and longitude.  The 196 non-CLS tokens from the final layer were
+spatially averaged to obtain one 1024-dimensional vector per patch and
+timestep, giving 427,049 output rows.
+
+\paragraph{TerraMind.}
+Both experiments used TerraMind v1 base and a $224\times224$ centre crop.  The
+input-unit detector converted source values to reflectance and clipped them to
+$[0,1]$.  The six-band experiment passed B02, B03, B04, B8A, B11, and B12
+directly through the model's band-selection interface, with no zero padding.
+The ten-band experiment mapped B02, B03, B04, B05, B06, B07, B08, B8A, B11,
+and B12 into TerraMind's 12-channel Sentinel-2 adapter and inserted zeros only
+for unavailable B01 and B09.  All 196 final-layer spatial tokens were averaged,
+producing one 768-dimensional vector per patch and timestep.  Each experiment
+contains 427,049 rows.
+
+\paragraph{Presto.}
+Presto was the only frozen encoder that received the complete seven-step
+sequence in one forward pass.  After the $256\times256$ crop, each band was
+spatially averaged over the patch.  Source units were detected per file and
+converted to raw digital numbers before calling
+\path{presto.construct_single_presto_input}; the official helper was responsible
+for normalisation, masking, and NDVI construction.  The completed experiment
+used the spatial-mean mode, not pixel sampling, and did not provide ERA5-Land to
+the encoder.  The official evaluation output was globally pooled to one
+128-dimensional vector per complete spatial-patch sequence, yielding 61,007
+rows.
+
+\paragraph{AlphaEarth and handcrafted features.}
+Earth Engine performed the spatial reduction for AlphaEarth.  The imported
+table therefore already contained one county--year row with the 64 columns
+\path{mean_A00}--\path{mean_A63}; these values were used without further
+pooling or normalisation.  The Sentinel-2 baseline similarly used 21
+precomputed county--year values: EVI, LAI, and fPAR for each of the seven
+28-day composites.
+
+\subsection{County aggregation used by the completed main table}
+
+For a county--year with embedding rows $\{\mathbf{z}_i\}_{i=1}^{n}$, the
+completed main-table entry point constructed
+\begin{equation}
+  \mathbf{x}=
+  \left[
+    \operatorname{mean}_{i}(\mathbf{z}_i),\;
+    \operatorname{std}_{i}(\mathbf{z}_i;\,\mathrm{ddof}=0)
+  \right].
+\end{equation}
+For Clay, Prithvi, and TerraMind, $i$ indexes patch--timestep rows; the completed
+main table therefore pooled space and time jointly and did not retain temporal
+order.  Their final widths were 2048, 2048, and 1536, respectively.  For
+Presto, each row already represents a complete temporal sequence, so the same
+operation pools only across spatial patches and produces 256 features.
+AlphaEarth and the 21 Sentinel-2 indices were already county--year vectors and
+were used as supplied.
+
+This operation is specific to the completed main-table results.  The temporal
+ablation and the climate-free LOYO implementation use the intended two-stage
+operation: population mean and standard deviation across the same complete
+patches at each timestep, followed by the experiment-specific temporal
+operation.  A rerun that replaces the completed main table with this two-stage
+operation is a new experiment and should not be presented as the source of the
+saved scores below.
+
+More precisely, let $\mathbf{z}_{p,t}\in\mathbb{R}^{D}$ denote the embedding
+for patch $p$ at timestep $t$.  Two-stage pooling first constructs
+\begin{equation}
+  \mathbf{s}_{t}=
+  \left[
+    \operatorname{mean}_{p}(\mathbf{z}_{p,t}),\;
+    \operatorname{std}_{p}(\mathbf{z}_{p,t};\,\mathrm{ddof}=0)
+  \right]\in\mathbb{R}^{2D},
+\end{equation}
+and only then applies temporal mean pooling, concatenation, or the learned
+one-dimensional convolution to the sequence
+$\{\mathbf{s}_{t}\}_{t=1}^{7}$.  Joint pooling instead treats every
+patch--timestep row as a member of one unordered set and computes a single
+mean and standard deviation across both axes.  It therefore removes temporal
+order immediately and combines within-timestep spatial variation with changes
+in the timestep means.  The mean components agree when every timestep has the
+same number of patches, but the standard-deviation components generally do
+not.
+
+\subsection{Splits, fitting, and regression heads}
+
+The primary comparison uses five county-grouped folds generated with
+\texttt{GroupKFold} on county FIPS.  All years from a county remain in the same
+outer fold.  For outer fold $f$, fold $f$ is the test partition, fold
+$(f+1)\bmod 5$ is the validation partition, and the remaining three folds are
+used for training.  Every year from 2019 to 2022 occurs in the training,
+validation, and test partitions of every outer fold.  Fixed nonlinear models
+were fitted on training plus validation data and evaluated once on the outer
+test fold.  Ridge used the validation partition to select its penalty before
+being refitted on training plus validation data.
+
+\begin{table*}[t]
+\centering
+\caption{Regression settings used by the completed five-fold main-table run.}
+\label{tab:regressor_settings_exact}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{p{2.1cm}p{13.6cm}}
+\toprule
+\textbf{Head} & \textbf{Exact fitting settings} \\
+\midrule
+Ridge & Training-only \texttt{StandardScaler}; $\alpha\in
+\{0.01,0.1,1,10,100\}$ selected by validation RMSE; scaler and Ridge refitted
+on training plus validation data.  Ridge was run once because it is
+deterministic. \\
+
+Random Forest & 600 trees; squared-error criterion; unlimited depth;
+\texttt{min\_samples\_leaf=2}; \texttt{max\_features=1.0}; bootstrap enabled;
+\texttt{random\_state}$\in\{0,1,2\}$. \\
+
+XGBoost & 600 estimators; learning rate 0.03; depth 6;
+\texttt{min\_child\_weight=2}; row and column subsampling 0.8; $L_1=0$;
+$L_2=1$; squared-error objective; histogram tree method;
+\texttt{random\_state}$\in\{0,1,2\}$. \\
+
+EBM & \texttt{interpret} 0.7.8
+\texttt{ExplainableBoostingRegressor}; \texttt{interactions=0};
+\texttt{max\_bins=1024}; \texttt{max\_interaction\_bins=64};
+\texttt{validation\_size=0.15}; 14 outer bags; no inner bags; learning rate
+0.04; greedy ratio 10; non-cyclic boosting; 50,000 maximum rounds; 100-round
+early stopping with tolerance $10^{-5}$; 500 main-effect and 100 interaction
+smoothing rounds; \texttt{min\_samples\_leaf=4}; minimum Hessian 0; $L_1=0$;
+$L_2=0$; maximum delta step 0; gain scale 5; two leaves; missing values treated
+as a separate category; RMSE objective;
+\texttt{random\_state}$\in\{0,1,2\}$; four CPU workers. \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+For the stochastic heads, predictions and metrics were averaged across seeds
+0, 1, and 2 within each outer fold.  Reported central values and standard
+deviations are then the mean and population standard deviation across the five
+outer folds.  Metrics are county-level $R^2$, RMSE, and MAE, with RMSE and MAE
+reported in bushels per acre.
+
+The saved run contract records the cohort, representations, heads, seeds, and
+split path, but not the package versions or worker count.  The versions above
+come from the repository's recorded regression environment, and four workers
+is the documented entry-point default.  Retaining an environment lock file and
+the full command line with future runs would remove this remaining ambiguity.
+
+\subsection{Completed EBM run}
+
+The EBM run is complete for all representations in the saved main-table
+artefact.  The implementation used the \texttt{interpret} 0.7.8 defaults listed
+in Table~\ref{tab:regressor_settings_exact}, except that pairwise interactions
+were disabled.  This produced an additive EBM and avoided the library default
+\texttt{interactions='5x'}, which would request 10,240 pairwise terms for a
+2048-dimensional representation.  Table~\ref{tab:ebm_completed} reports the
+saved five-fold results.  The Sentinel-2+Daymet row is an auxiliary climate
+late-fusion result and is not part of the climate-free encoder comparison.
+
+\begin{table}[t]
+\centering
+\caption{Completed EBM results.  $R^2$ and RMSE are mean $\pm$ population
+standard deviation across five county-grouped outer folds after seed averaging;
+MAE is the corresponding fold mean.}
+\label{tab:ebm_completed}
+\scriptsize
+\setlength{\tabcolsep}{3.2pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Representation} & $\mathbf{R^2}$ & \textbf{RMSE} & \textbf{MAE} \\
+\midrule
+AlphaEarth & $0.8260\pm0.0312$ & $14.3080\pm1.1126$ & 10.2626 \\
+S2 indices & $0.7589\pm0.0484$ & $16.8122\pm1.0604$ & 12.7402 \\
+S2 + Daymet$^{\dagger}$ & $0.8595\pm0.0172$ & $12.8879\pm0.4621$ & 9.8236 \\
+Clay & $0.8448\pm0.0382$ & $13.4540\pm1.1379$ & 10.0715 \\
+Prithvi-EO-2.0-300M-TL & $0.8177\pm0.0402$ & $14.6060\pm1.0789$ & 10.8846 \\
+TerraMind, 6 bands & $0.8067\pm0.0449$ & $15.0317\pm1.2453$ & 11.3173 \\
+TerraMind, 10 bands & $0.8169\pm0.0483$ & $14.5964\pm1.3135$ & 10.8417 \\
+Presto & $0.8000\pm0.0493$ & $15.2783\pm1.3591$ & 11.6661 \\
+\bottomrule
+\multicolumn{4}{l}{\scriptsize $^{\dagger}$Auxiliary county-level climate late fusion.}
+\end{tabular}
+\end{table}
+
+\subsection{Climate late fusion and temporal readout ablation}
+
+Daymet was used only after county aggregation.  The feature order is day
+length, precipitation, shortwave radiation, maximum temperature, and minimum
+temperature, with seven 28-day values for each variable, giving 35 climate
+features.  Concatenating these with the 21 Sentinel-2 EVI/LAI/fPAR values gives
+the 56-dimensional Sentinel-2+Daymet vector.  Daymet was not passed through
+Clay, Prithvi, TerraMind, or Presto.  The completed main-table directory does
+not contain a native Presto+ERA5-Land result.
+
+The completed temporal-ablation artefacts cover all five outer folds and seeds
+0, 1, and 2 for Clay, Prithvi, and six-band TerraMind.  Complete patch identity
+is matched across encoders.  At each timestep, patch embeddings are represented
+by their population mean and population standard deviation, producing a
+seven-step county sequence.  The \texttt{mean} and \texttt{concat} strategies
+use a learned 256-unit projection; \texttt{conv1d} uses two temporal
+convolutions with kernel size 3 and 128 then 256 channels, followed by temporal
+global mean pooling.  All strategies share a LayerNorm--128-unit MLP head with
+GELU and dropout 0.2.  Inputs are standardised per timestep and feature, and
+targets are standardised, using the training partition only.  Training uses
+AdamW, learning rate $10^{-3}$, weight decay $10^{-4}$, batch size 32, MSE on
+the standardised target, at most 300 epochs, and early stopping after 30 epochs
+without improvement in validation county RMSE.  Mixed precision was disabled
+in the completed run.
+
+\subsection{Supervised 3D-ConvLSTM configuration}
+
+The supervised Sentinel-2 reference uses the same seven-composite,
+ten-channel, $256\times256$ input contract and the same county-grouped outer
+folds.  Its 3-D convolutional stem has channels $[24,48,64]$, kernel
+$3\times3\times3$, spatial stride 2 at each stage, group normalisation with
+eight groups, GELU, and dropout 0.15.  A single ConvLSTM layer with 64 hidden
+channels and a $3\times3$ kernel carries spatial hidden and cell states through
+the sequence.  The final hidden state is spatially pooled and passed through a
+64-unit regression head.
+
+Training uses a learning rate of $3\times10^{-4}$, weight decay $10^{-5}$,
+batch size 1, eight sampled patches per county--year, patch chunk size 2,
+four-step gradient accumulation, gradient clipping at 1.0, mixed precision, a
+maximum of 50 epochs, and early stopping patience 8.  Band and target
+normalisation statistics are fitted on training county--years only.  The
+validation fold selects the best epoch by RMSE and the outer test fold is
+evaluated once.  This appendix records the executable configuration; no
+completed supervised result is claimed here.
+
+\subsection{Software, hardware, and saved audit artefacts}
+
+Frozen embedding extraction ran on the JUPITER booster partition using one
+NVIDIA GH200 GPU under Python 3.13.5 and PyTorch 2.13.0+cu130.  Prithvi and
+TerraMind used TerraTorch 1.2.11.  Presto used its separate environment and the
+repository revision shown in Table~\ref{tab:encoder_checkpoints_exact}.  The
+recorded local regression environment was Python 3.13.13, NumPy 2.5.2, pandas
+3.0.5, scikit-learn 1.9.0, XGBoost 3.4.1, and \texttt{interpret} 0.7.8.  The
+completed temporal ablation records PyTorch 2.12.0, NumPy 2.4.6, and pandas
+3.0.3.
+
+The checkpoint cache is retained under \path{hf_cache/}, including the exact
+TerraMind and Prithvi snapshot revisions listed above.  The copied model
+artefacts are under \path{clay/} and \path{models/}.  Each completed embedding
+has a sidecar named \path{outputs/embeddings/*.parquet.provenance.json}, which
+records the model identifier, checkpoint, source and output counts, band and
+shape contracts, pooling operation, and exclusion counts.  The completed
+regression results and their cohort/head contract are stored in
+\path{outputs/main_table_covered/main_table.csv} and
+\path{outputs/main_table_covered/run_contract.json}.  The temporal-ablation
+folds additionally save data contracts, checkpoints, predictions, per-seed
+metrics, and fold summaries under \path{outputs/temporal_ablation_covered/}.
