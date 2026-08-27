@@ -66,7 +66,7 @@ if [[ "$minimal" == "1" ]]; then
     configs
     pyproject.toml
     README.md
-    SETUP.md
+    README.md
     VALIDATION_REVIEW.md
     data/sources/embeddings_with_yield_matched.csv
     data/sources/s2_daymet_merged_matched.xlsx
@@ -106,7 +106,7 @@ On the cluster:
 
   # only if the environment is missing them:
   #   pip install -e '.[test,parquet,tabular]'
-  #   pip install terratorch 'torchgeo==0.9.0'        # see SETUP.md section 2
+  #   pip install terratorch 'torchgeo==0.9.0'        # see README.md section 2
   #   pip install earthengine-api webdataset hurry.filesize geopandas \\
   #               google-cloud-storage xarray einops
   #   pip install --no-deps openmapflow                # pins pandas==1.5.3 otherwise

@@ -215,7 +215,7 @@ the `sentinel-2-l2a` block, and that block is identical to the official
 Note `sync_to_cluster.sh` excludes `clay/*.ckpt`, so the 4.9 GB checkpoint is
 never synced by default — pass `--with-clay-ckpt` if it is not already there.
 Presto needs `PRESTO_REPO` plus the undeclared dependencies listed in
-`SETUP.md` §2b.
+`README.md` §2b.
 
 ### HuggingFace weights: pre-download, compute nodes are offline
 
