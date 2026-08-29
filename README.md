@@ -171,7 +171,18 @@ principal component against LAI, EVI and fPAR per county-year, and measures how
 much of each index is linearly recoverable from the full embedding.
 `scripts/run_inseason_forecast.py` refits on the first *k* composites for
 *k* = 1…7, and in a leave-one-composite-out mode that isolates each growth
-stage's marginal contribution.
+stage's marginal contribution. It also writes per-county predictions, from
+which `scripts/plot_inseason_anomaly.py` computes the within-county anomaly —
+the target with each county's mean removed, which separates recognising a
+county from reading its current season:
+
+```bash
+python scripts/plot_inseason_anomaly.py \
+  --predictions outputs/inseason_covered/inseason_results_predictions.csv \
+  --metric r2 --out figures/inseason_anomaly.png
+```
+
+`--metric rmse` gives the same decomposition in bushels per acre.
 
 ### 7. Supervised reference
 
@@ -205,6 +216,7 @@ Slurm and skips stages whose outputs already exist.
 benchmark_embeddings/
   data/          NPZ patch reader, spatial policy, band normalisation, splits
   frozen/        one adapter per foundation model, shared output schema
+  models/        supervised networks (3D stem, then ConvLSTM or GRU/LSTM)
   *.py           CLI modules, each also a benchmark-* console script
 configs/         experiment configuration
 scripts/         Slurm entry points and analysis scripts
@@ -214,8 +226,9 @@ outputs/         run contracts, summaries and results
 
 `outputs/` carries the contracts, summary tables and result files for the runs
 the paper reports, so the published numbers can be traced without rerunning
-anything. Per-county predictions, checkpoints and the 14 GB of embedding
-parquets are excluded for size.
+anything. Checkpoints and the 14 GB of embedding parquets are excluded for
+size, as are most per-county prediction files; the in-season predictions are
+kept because the appendix figure and table are computed from them.
 
 ## Tests
 

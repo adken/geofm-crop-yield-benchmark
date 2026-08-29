@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "backbone": "clay_v1_5_cls",
+  "official_repository": "https://github.com/Clay-foundation/model",
+  "checkpoint": "/e/project1/3d-abc/adriko1/clay-foundation-model/clay-v1.5.ckpt",
+  "metadata": "/e/project1/3d-abc/adriko1/benchmark-embeddings/clay/model/configs/metadata.yaml",
+  "input_root": "/e/project1/3d-abc/adriko1/datasets/US/T7",
+  "output": "/e/project1/3d-abc/adriko1/benchmark-embeddings/outputs/embeddings/clay_v1_5_cls.parquet",
+  "output_rows": 427049,
+  "embedding_dim": 1024,
+  "encoder_layer": "final_encoder_tokens",
+  "token_pool": "cls",
+  "device": "cuda",
+  "dataset": {
+    "source_cohort_files": 427049,
+    "schedule_input_files": 427049,
+    "selected_input_files": 427049,
+    "out_of_schedule_files_excluded": 0,
+    "out_of_schedule_timestep_policy": "audit_then_exclude",
+    "county_years": 2076,
+    "spatial_patches": 61007,
+    "complete_spatial_patches": 61007,
+    "incomplete_spatial_patches": 0,
+    "patch_count_min": 1,
+    "patch_count_median": 32.0,
+    "patch_count_max": 64,
+    "timesteps": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "timestep_base": 0,
+    "target_size": [
+      256,
+      256
+    ],
+    "oversize_policy": "center_crop",
+    "undersize_policy": "error",
+    "undersized_spatial_patches_excluded": 0,
+    "undersized_files_excluded": 0,
+    "nonfinite_policy": "error",
+    "bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B11",
+      "B12"
+    ],
+    "normalization": "official_clay_sensor_mean_std",
+    "wavelength_units": "micrometres"
+  }
+}

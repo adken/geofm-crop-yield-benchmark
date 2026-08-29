@@ -3,11 +3,11 @@
 # embedding parquets and 15 GB of checkpoints do not belong in a git history.
 # The extraction scripts and Earth Engine downloaders reproduce all of it.
 # ---------------------------------------------------------------------------
-data/
-hf_cache/
-models/
-clay/
-embeddings/
+/data/
+/hf_cache/
+/models/
+/clay/
+/embeddings/
 *.parquet
 *.parquet.bak
 *.ckpt
@@ -26,7 +26,7 @@ outputs/climate_fusion_covered/
 outputs/cohort_2180/
 outputs/outputs/
 outputs/results/
-legacy/
+/legacy/
 
 # ---------------------------------------------------------------------------
 # Per-run artefacts that are large or regenerable. Summaries, contracts and
