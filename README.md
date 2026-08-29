@@ -205,7 +205,6 @@ Slurm and skips stages whose outputs already exist.
 benchmark_embeddings/
   data/          NPZ patch reader, spatial policy, band normalisation, splits
   frozen/        one adapter per foundation model, shared output schema
-  models/        supervised networks
   *.py           CLI modules, each also a benchmark-* console script
 configs/         experiment configuration
 scripts/         Slurm entry points and analysis scripts
