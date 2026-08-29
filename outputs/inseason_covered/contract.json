@@ -7,5 +7,6 @@
   ],
   "split": "/Users/adriko/benchmark-embeddings/outputs/cohort_covered/group_kfold_county_tabular.csv",
   "folds": "county-grouped GroupKFold from the shared manifest",
+  "mode": "progressive",
   "note": "features truncated to the first k of seven composites"
 }

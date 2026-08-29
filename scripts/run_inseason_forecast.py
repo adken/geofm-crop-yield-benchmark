@@ -183,6 +183,8 @@ def main() -> int:
     position = pd.Series(range(len(shared)), index=shared)
 
     rows = []
+    prediction_rows = []
+    keys = np.asarray(shared)
     for name, cube in representations.items():
         if args.mode == "progressive":
             selections = [(k, list(range(k))) for k in range(1, COMPOSITES + 1)]
@@ -202,13 +204,31 @@ def main() -> int:
                 test = position[role.values == "test"].to_numpy()
                 if not len(test) or not len(val):
                     continue
-                scores = []
+                scores, seed_predictions = [], []
                 for seed in args.seeds:
                     pred = fit_predict(args.regressor, X, target, train, val, test,
                                        seed, args.n_jobs)
+                    seed_predictions.append(pred)
                     scores.append((r2_score(target[test], pred),
                                    np.sqrt(mean_squared_error(target[test], pred))))
                 per_fold.append(np.mean(scores, axis=0))
+                # Retain the seed-averaged test predictions. Pooled R2 rewards
+                # recovering a county's long-run mean, which most of this
+                # cohort's variance is; keeping predictions lets the
+                # within-county component be measured per truncation.
+                averaged = np.mean(seed_predictions, axis=0)
+                for position_index, prediction in zip(test, averaged):
+                    key = keys[position_index]
+                    prediction_rows.append({
+                        "representation": name,
+                        "composites" if args.mode == "progressive"
+                        else "dropped_composite": k,
+                        "fold": int(fold),
+                        "county_id": key.split("-")[0],
+                        "year": int(key.split("-")[1]),
+                        "observed_yield": float(target[position_index]),
+                        "predicted_yield": float(prediction),
+                    })
             per_fold = np.array(per_fold)
             rows.append({"representation": name,
                          ("composites" if args.mode == "progressive"
@@ -229,6 +249,7 @@ def main() -> int:
             lambda r: round(reference.loc[r.representation, "r2_mean"] - r.r2_mean, 4)
             if r.dropped_composite else 0.0, axis=1)
     frame.round(4).to_csv(out / f"{stem}.csv", index=False)
+    pd.DataFrame(prediction_rows).to_csv(out / f"{stem}_predictions.csv", index=False)
     (out / "contract.json").write_text(json.dumps({
         "county_years": len(shared),
         "regressor": args.regressor,
