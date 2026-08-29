@@ -1,0 +1,79 @@
+{
+  "artifacts": {
+    "checkpoint": "/e/project1/3d-abc/adriko1/results/supervised_covered/3d_convlstm_converged/fold_2/seed_0/best.pt",
+    "data_contract": "/e/project1/3d-abc/adriko1/results/supervised_covered/3d_convlstm_converged/fold_2/seed_0/data_contract.json",
+    "normalization": "/e/project1/3d-abc/adriko1/results/supervised_covered/3d_convlstm_converged/fold_2/seed_0/normalization.json",
+    "predictions": "/e/project1/3d-abc/adriko1/results/supervised_covered/3d_convlstm_converged/fold_2/seed_0/predictions.csv"
+  },
+  "experiment": {
+    "id": "supervised_s2_3d_convlstm",
+    "input_modalities": [
+      "Sentinel-2"
+    ],
+    "model_label": "YieldSAT-inspired supervised S2 3D-ConvLSTM",
+    "variant": "countyT7_full"
+  },
+  "schema_version": 2,
+  "seed": 20260614,
+  "selection": {
+    "direction": "minimize",
+    "epoch": 13,
+    "epochs_trained": 22,
+    "max_epochs_configured": 50,
+    "metric": "county_rmse",
+    "patience": 8,
+    "source": "validation",
+    "termination": "fixed_budget_not_converged",
+    "value": 13.901449940819129
+  },
+  "split": {
+    "cohort_years": [
+      2019,
+      2020,
+      2021,
+      2022
+    ],
+    "fold": 2,
+    "grouping": "county_all_years_together",
+    "label": "fold_2",
+    "mode": "primary",
+    "partition_years": {
+      "test": [
+        2019,
+        2020,
+        2021,
+        2022
+      ],
+      "train": [
+        2019,
+        2020,
+        2021,
+        2022
+      ],
+      "validation": [
+        2019,
+        2020,
+        2021,
+        2022
+      ]
+    },
+    "path": "/e/project1/3d-abc/adriko1/benchmark-embeddings/outputs/cohort_covered/group_kfold_county_tabular.csv",
+    "validation_fold": null,
+    "year_policy": "all_cohort_years_in_each_train_validation_test_partition"
+  },
+  "target_and_metric_units": {
+    "canonical_yield": "bushels_per_acre",
+    "mae": "bushels_per_acre",
+    "r2": "dimensionless",
+    "rmse": "bushels_per_acre"
+  },
+  "test": {
+    "county_mae": 10.746001517054546,
+    "county_n": 415,
+    "county_nrmse": 0.08535742141094814,
+    "county_r2": 0.8284921666489907,
+    "county_rmse": 14.220176182103623,
+    "field_r2": null,
+    "subfield_r2": null
+  }
+}

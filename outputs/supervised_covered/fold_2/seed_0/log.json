@@ -1,0 +1,156 @@
+[
+  {
+    "epoch": 0,
+    "train_county_mse_scaled": 0.5822910368920137,
+    "validation_county_mae": 15.67833121793816,
+    "validation_county_r2": 0.6507775439627135,
+    "validation_county_rmse": 20.193091042749664
+  },
+  {
+    "epoch": 1,
+    "train_county_mse_scaled": 0.43831876901169425,
+    "validation_county_mae": 13.916715418804124,
+    "validation_county_r2": 0.7223394341581443,
+    "validation_county_rmse": 18.005650846934458
+  },
+  {
+    "epoch": 2,
+    "train_county_mse_scaled": 0.35359557445208806,
+    "validation_county_mae": 15.391164951554263,
+    "validation_county_r2": 0.6615513760103546,
+    "validation_county_rmse": 19.879163174034915
+  },
+  {
+    "epoch": 3,
+    "train_county_mse_scaled": 0.36301363086721933,
+    "validation_county_mae": 12.18498434411474,
+    "validation_county_r2": 0.7859577032893001,
+    "validation_county_rmse": 15.808895305909862
+  },
+  {
+    "epoch": 4,
+    "train_county_mse_scaled": 0.31683328015974555,
+    "validation_county_mae": 12.01634726283062,
+    "validation_county_r2": 0.7927508028655419,
+    "validation_county_rmse": 15.55600774036791
+  },
+  {
+    "epoch": 5,
+    "train_county_mse_scaled": 0.32011237096948886,
+    "validation_county_mae": 13.744482653514448,
+    "validation_county_r2": 0.7387930151650103,
+    "validation_county_rmse": 17.46401578324861
+  },
+  {
+    "epoch": 6,
+    "train_county_mse_scaled": 0.30262433048278,
+    "validation_county_mae": 12.663991298445737,
+    "validation_county_r2": 0.7765826178932758,
+    "validation_county_rmse": 16.15140106530015
+  },
+  {
+    "epoch": 7,
+    "train_county_mse_scaled": 0.2847958227234463,
+    "validation_county_mae": 11.962705118569982,
+    "validation_county_r2": 0.7831300978223624,
+    "validation_county_rmse": 15.912974394404783
+  },
+  {
+    "epoch": 8,
+    "train_county_mse_scaled": 0.29484511613368225,
+    "validation_county_mae": 13.224127899537605,
+    "validation_county_r2": 0.7448658461314804,
+    "validation_county_rmse": 17.259810458198704
+  },
+  {
+    "epoch": 9,
+    "train_county_mse_scaled": 0.28971083890586996,
+    "validation_county_mae": 12.467212487645897,
+    "validation_county_r2": 0.7751391860557753,
+    "validation_county_rmse": 16.20349171325043
+  },
+  {
+    "epoch": 10,
+    "train_county_mse_scaled": 0.2673626780593529,
+    "validation_county_mae": 12.035345308234891,
+    "validation_county_r2": 0.790661162149788,
+    "validation_county_rmse": 15.634234675608297
+  },
+  {
+    "epoch": 11,
+    "train_county_mse_scaled": 0.2812425272139267,
+    "validation_county_mae": 11.291871073159827,
+    "validation_county_r2": 0.8102147223168967,
+    "validation_county_rmse": 14.886170262597448
+  },
+  {
+    "epoch": 12,
+    "train_county_mse_scaled": 0.26892461822493574,
+    "validation_county_mae": 11.071052455672298,
+    "validation_county_r2": 0.8184547561644298,
+    "validation_county_rmse": 14.5594228681359
+  },
+  {
+    "epoch": 13,
+    "train_county_mse_scaled": 0.2738070735686984,
+    "validation_county_mae": 10.74418132000659,
+    "validation_county_r2": 0.8344928516499419,
+    "validation_county_rmse": 13.901449940819129
+  },
+  {
+    "epoch": 14,
+    "train_county_mse_scaled": 0.25937913181051275,
+    "validation_county_mae": 14.42111689188394,
+    "validation_county_r2": 0.7086347693900374,
+    "validation_county_rmse": 18.44465705305171
+  },
+  {
+    "epoch": 15,
+    "train_county_mse_scaled": 0.2633989656445546,
+    "validation_county_mae": 11.583138405673473,
+    "validation_county_r2": 0.8030004586212922,
+    "validation_county_rmse": 15.166463690782846
+  },
+  {
+    "epoch": 16,
+    "train_county_mse_scaled": 0.24323565917662704,
+    "validation_county_mae": 11.504681613416556,
+    "validation_county_r2": 0.8083449001425004,
+    "validation_county_rmse": 14.959322060216433
+  },
+  {
+    "epoch": 17,
+    "train_county_mse_scaled": 0.265080520313066,
+    "validation_county_mae": 10.792387334984468,
+    "validation_county_r2": 0.8307961122814438,
+    "validation_county_rmse": 14.055842783381003
+  },
+  {
+    "epoch": 18,
+    "train_county_mse_scaled": 0.2421755667638559,
+    "validation_county_mae": 10.948004973997552,
+    "validation_county_r2": 0.8289204204567889,
+    "validation_county_rmse": 14.133535343879085
+  },
+  {
+    "epoch": 19,
+    "train_county_mse_scaled": 0.2593819639490296,
+    "validation_county_mae": 14.61108555805252,
+    "validation_county_r2": 0.7222545888819213,
+    "validation_county_rmse": 18.008401647588745
+  },
+  {
+    "epoch": 20,
+    "train_county_mse_scaled": 0.2542254088266651,
+    "validation_county_mae": 11.552815834872694,
+    "validation_county_r2": 0.7999073715013743,
+    "validation_county_rmse": 15.285064187792917
+  },
+  {
+    "epoch": 21,
+    "train_county_mse_scaled": 0.2507429409187096,
+    "validation_county_mae": 11.371262129818101,
+    "validation_county_r2": 0.8147223510753074,
+    "validation_county_rmse": 14.708325681053829
+  }
+]
