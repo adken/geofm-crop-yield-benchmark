@@ -1,4 +1,4 @@
-# geofm-crop-yield-embeddings
+# geofm-crop-yield-benchmark
 
 Code and run artefacts for *From Pretraining to Prediction: Benchmarking
 Geospatial Foundation Models for Corn Yield Estimation*.
