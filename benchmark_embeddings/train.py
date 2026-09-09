@@ -409,6 +409,10 @@ def train_from_config(cfg: dict[str, Any]) -> dict[str, Any]:
     epochs_without_improvement = 0
     checkpoint_path = out_dir / "best.pt"
     log: list[dict[str, Any]] = []
+    # Why the loop exited, recorded where it happens rather than inferred
+    # afterwards from the epoch count. Inferring it is what produced the
+    # inverted label described at the termination field below.
+    stopped_on_patience = False
 
     # Evaluation-only: skip training and score the existing validation-selected
     # checkpoint on the held-out test fold. This exists because a fold whose
@@ -537,6 +541,7 @@ def train_from_config(cfg: dict[str, Any]) -> dict[str, Any]:
             flush=True,
         )
         if epochs_without_improvement >= patience:
+            stopped_on_patience = True
             break
 
     if best_epoch < 0 or not checkpoint_path.exists():
@@ -585,10 +590,17 @@ def train_from_config(cfg: dict[str, Any]) -> dict[str, Any]:
             "epochs_trained": len(log),
             "max_epochs_configured": int(training_cfg.get("max_epochs", 50)),
             "patience": patience,
+            # An earlier version derived this from len(log) < max_epochs, which
+            # is precisely the condition early stopping produces, so every
+            # early-stopped run was labelled fixed_budget_not_converged and
+            # every run that exhausted its epochs was labelled early_stopping.
+            # The break reason is tracked directly now.
             "termination": (
-                "fixed_budget_not_converged"
-                if eval_only or len(log) < int(training_cfg.get("max_epochs", 50))
+                "eval_only"
+                if eval_only
                 else "early_stopping"
+                if stopped_on_patience
+                else "epoch_cap_reached"
             ),
         },
         "split": split_metadata,

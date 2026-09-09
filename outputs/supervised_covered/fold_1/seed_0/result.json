@@ -23,7 +23,7 @@
     "metric": "county_rmse",
     "patience": 8,
     "source": "validation",
-    "termination": "fixed_budget_not_converged",
+    "termination": "early_stopping",
     "value": 13.467964106428344
   },
   "split": {
